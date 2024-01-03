@@ -6,32 +6,32 @@ class DigitalTimer extends Component {
   state = {timerStart: false, timer: 1500}
 
   clearingInt = () => {
+    console.log(5)
     if (this.timerId !== undefined) {
       clearInterval(this.timerId)
     }
   }
 
-  settingInt = () => {
-    this.setState(prevState => {
-      let a = {}
-      if (prevState.timer !== 0) {
-        a = {
-          timer: prevState.timer - 1,
-          timerStart: !timerStart,
-        }
-      } else {
-        this.clearingInt()
-        a = {timerStart}
-      }
-      return a
-    })
-  }
-
   startOrStopBtn = () => {
     const {timerStart} = this.state
     if (!timerStart) {
-      this.timerId = setInterval(settingInt, 1000)
+      this.timerId = setInterval(() => {
+        this.setState(prevState => {
+          let a = {}
+          if (prevState.timer !== 0) {
+            a = {
+              timer: prevState.timer - 1,
+              timerStart: !timerStart,
+            }
+          } else {
+            this.clearingInt()
+            a = {timerStart}
+          }
+          return a
+        })
+      }, 1000)
     } else {
+      console.log(2)
       this.clearingInt()
       this.setState(prevState => ({
         timerStart: !timerStart,
