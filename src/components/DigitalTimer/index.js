@@ -3,12 +3,12 @@ import {Component} from 'react'
 import './index.css'
 
 class DigitalTimer extends Component {
-  state = {timerStart: false, timer: 1500}
+  state = {timerStart: false, timer: 1500, limitValue: 25}
 
   clearingInt = () => {
-    console.log(5)
+    clearInterval(this.timerId)
     if (this.timerId !== undefined) {
-      clearInterval(this.timerId)
+      console.log(5)
     }
   }
 
@@ -42,26 +42,29 @@ class DigitalTimer extends Component {
   incr = () => {
     const {timerStart} = this.state
     if (!timerStart) {
-      this.setState(p => ({timer: p.timer + 60}))
+      this.setState(p => ({timer: p.timer + 60, limitValue: p.limitValue + 1}))
     }
   }
 
   decr = () => {
-    const {timer, timerStart} = this.state
+    const {timer, timerStart, limitValue} = this.state
     if (!timerStart) {
-      if (timer !== 0) {
-        this.setState(p => ({timer: p.timer - 60}))
+      if (limitValue !== 0 && timer >= 60) {
+        this.setState(p => ({
+          timer: p.timer - 60,
+          limitValue: p.limitValue - 1,
+        }))
       }
     }
   }
 
   resetBtn = () => {
     this.clearingInt()
-    this.setState({timer: 1500, timerStart: false})
+    this.setState({timer: 1500, timerStart: false, limitValue: 25})
   }
 
   render() {
-    const {timerStart, timer} = this.state
+    const {timerStart, timer, limitValue} = this.state
     return (
       <div className="bg-container">
         <h1>Digital Timer</h1>
@@ -88,9 +91,7 @@ class DigitalTimer extends Component {
                       : 'https://assets.ccbp.in/frontend/react-js/play-icon-img.png'
                   }
                 />
-                <p className="b2-para b2-para3">
-                  {timerStart ? 'Pause' : 'Start'}
-                </p>
+                {timerStart ? 'Pause' : 'Start'}
               </button>
 
               <button className="button btn1" type="button">
@@ -100,7 +101,7 @@ class DigitalTimer extends Component {
                   alt="reset icon"
                   src="https://assets.ccbp.in/frontend/react-js/reset-icon-img.png"
                 />
-                <p className="b2-para">Reset</p>
+                Reset
               </button>
             </div>
             <p>Set Timer limit</p>
@@ -109,9 +110,7 @@ class DigitalTimer extends Component {
                 -
               </button>
               <p className="b2-para2">
-                {Math.floor(timer / 60)
-                  .toString()
-                  .padStart(2, '0')}
+                {Math.floor(limitValue).toString().padStart(2, '0')}
               </p>
               <button type="button" onClick={this.incr} className="button">
                 +
